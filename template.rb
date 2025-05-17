@@ -1,15 +1,40 @@
 BASE_REPOSITORY_URL = 'https://raw.githubusercontent.com/umikun-summer/rails-template/main/%s'.freeze
+
 FILES = %w[
   .rubocop.yml
   .haml-lint.yml
   config/locales/ja.yml
 ].freeze
 
+# 追加するgem
 gem 'sgcop', github: 'SonicGarden/sgcop', branch: 'main'
 gem 'haml_lint', require: false
+gem 'simple_form'
+gem 'haml-rails'
+gem 'html2haml' # 一時的に使うだけ
 
+# ファイルをリモートから取得
 FILES.each do |file_path|
   get BASE_REPOSITORY_URL % file_path, file_path
 end
 
+# en.yml は不要なので削除
 remove_file 'config/locales/en.yml'
+
+after_bundle do
+  # simple_form を bootstrap連携でセットアップ
+  generate 'simple_form:install', '--bootstrap'
+
+  # simple_form が作る scaffold用テンプレートをフォルダごと削除
+  simple_form_scaffold_template_file = 'lib/templates/haml/scaffold/_form.html.haml'
+  remove_file simple_form_scaffold_template_file if File.exist?(simple_form_scaffold_template_file)
+
+  # haml-rails 標準の変換タスクで .haml を作成 (erbファイルは残す)
+  run "yes 'n' | bin/rails haml:erb2haml"
+
+  # html2haml はもう不要なので Gemfile から削除
+  gsub_file 'Gemfile', /gem "html2haml"/, ''
+
+  # bundle install で反映
+  run 'bundle install'
+end
