@@ -22,6 +22,9 @@ end
 remove_file 'config/locales/en.yml'
 
 after_bundle do
+  # Gemfile を自動修正
+  run 'bundle exec rubocop -a Gemfile'
+
   # simple_form を bootstrap連携でセットアップ
   generate 'simple_form:install', '--bootstrap'
 
@@ -33,7 +36,7 @@ after_bundle do
   run "yes 'n' | bin/rails haml:erb2haml"
 
   # html2haml はもう不要なので Gemfile から削除
-  gsub_file 'Gemfile', /gem "html2haml"/, ''
+  gsub_file 'Gemfile', /gem 'html2haml'/, ''
 
   # bundle install で反映
   run 'bundle install'
