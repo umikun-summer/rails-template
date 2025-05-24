@@ -28,7 +28,7 @@ after_bundle do
   # simple_form を bootstrap連携でセットアップ
   generate 'simple_form:install', '--bootstrap'
 
-  # simple_form が作る scaffold用テンプレートをフォルダごと削除
+  # simple_form が作る scaffold用テンプレートを削除
   simple_form_scaffold_template_file = 'lib/templates/haml/scaffold/_form.html.haml'
   remove_file simple_form_scaffold_template_file if File.exist?(simple_form_scaffold_template_file)
 
