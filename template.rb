@@ -40,4 +40,9 @@ after_bundle do
 
   # bundle install で反映
   run 'bundle install'
+
+  # 認証機能を追加するかどうか確認
+  if yes?('認証機能を追加しますか？ [y/n]')
+    generate('authentication')
+  end
 end
