@@ -45,4 +45,16 @@ after_bundle do
   if yes?('認証機能を追加しますか？ [y/n]')
     generate('authentication')
   end
+
+  # 管理画面を用意するかどうか確認
+  if yes?('管理者画面を追加しますか？ [y/n]')
+    create_admins_application_controller
+  end
+end
+
+def create_admins_application_controller
+  file_path = 'app/controllers/admins/application_controller.rb'
+
+  run 'mkdir app/controllers/admins'
+  get BASE_REPOSITORY_URL % file_path, file_path
 end
