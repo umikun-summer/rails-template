@@ -5,6 +5,13 @@ FILES = %w[
   config/locales/ja.yml
 ].freeze
 
+def create_admins_application_controller
+  file_path = 'app/controllers/admins/application_controller.rb'
+
+  run 'mkdir app/controllers/admins'
+  get BASE_REPOSITORY_URL % file_path, file_path
+end
+
 # ファイルをリモートから取得
 FILES.each do |file_path|
   get BASE_REPOSITORY_URL % file_path, file_path
@@ -19,10 +26,6 @@ gem 'html2haml' # 一時的に使用する
 
 # en.yml は不要なので削除
 remove_file 'config/locales/en.yml'
-
-# database.yml をgitにpushしないように設定
-run 'cp config/database.yml config/database.yml.sample'
-run "echo 'config/database.yml' >> .gitignore"
 
 after_bundle do
   # Gemfile を自動修正
@@ -47,11 +50,4 @@ after_bundle do
   run "yes 'n' | bin/rails haml:erb2haml"
   gsub_file 'Gemfile', /gem 'html2haml'/, ''
   run 'bundle install'
-end
-
-def create_admins_application_controller
-  file_path = 'app/controllers/admins/application_controller.rb'
-
-  run 'mkdir app/controllers/admins'
-  get BASE_REPOSITORY_URL % file_path, file_path
 end
