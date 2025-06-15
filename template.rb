@@ -36,13 +36,16 @@ after_bundle do
   simple_form_scaffold_template_file = 'lib/templates/haml/scaffold/_form.html.haml'
   remove_file simple_form_scaffold_template_file if File.exist?(simple_form_scaffold_template_file)
 
+  # authentication = false
   if yes?('認証機能を追加しますか？ [y/n]')
     generate('authentication')
 
-    if yes?('OAuth用のmodelを追加しますか？ [y/n]')
-      generate('model', 'OauthAccount', 'user:references',' provider:string','uid:string','access_token:string', 'refresh_token:string', 'token_expires_at:datetime')
-    end
+    # authentication = true
   end
+
+  # if authentication && yes?('OAuth用のmodelを追加しますか？ [y/n]')
+  #   generate('model', 'OauthAccount', 'user:references',' provider:string','uid:string','access_token:string', 'refresh_token:string', 'token_expires_at:datetime')
+  # end
 
   if yes?('管理者画面を追加しますか？ [y/n]')
     create_admins_application_controller
